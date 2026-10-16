@@ -25,6 +25,10 @@ Voxa 是面向 macOS 的本地优先语音输入工具：把口述变成文字�
 
 弹簧导航、随麦克风音量变化的光环、卡片悬停高光、处理流光、完成勾选描画。支持 macOS「减少动态效果」，录音与取消立即响应。基于 MIT 开源项目 [Motion](https://github.com/motiondivision/motion)，详见[动效设计说明](docs/MOTION.md)。
 
+## 可选国内 / 国际云端模型
+
+v0.2.0 新增 DeepSeek、通义千问、智谱 GLM、Kimi、豆包、硅基流动、MiniMax，以及 OpenAI、Groq、OpenRouter、Claude、Gemini 预设。语音识别和文字整理独立选择，默认继续本地运行。支持自定义 HTTPS 接口、加密保存密钥与连接测试。[配置步骤、支持范围与隐私说明](docs/CLOUD-MODELS.md)。
+
 ## 能做什么
 
 - **说完即整理**：Whisper 识别，Qwen 本地去口头禅与标点整理；也支持翻译、选中文字后语音编辑。
@@ -40,7 +44,7 @@ Voxa 是面向 macOS 的本地优先语音输入工具：把口述变成文字�
 
 ## 安装
 
-**[下载 Voxa Mac 安装包（Apple Silicon / macOS 26+）](https://github.com/EricHong123/voxa/releases/download/v0.1.2-alpha.1/Voxa-0.1.2-macOS26-AppleSilicon.dmg)** · [版本说明与 SHA-256](https://github.com/EricHong123/voxa/releases/tag/v0.1.2-alpha.1)
+**[下载 Voxa Mac 安装包（Apple Silicon / macOS 26+）](https://github.com/EricHong123/voxa/releases/download/v0.2.0-alpha.1/Voxa-0.2.0-macOS26-AppleSilicon.dmg)** · [版本说明与 SHA-256](https://github.com/EricHong123/voxa/releases/tag/v0.2.0-alpha.1)
 
 打开 DMG，把 **Voxa.app 拖到“应用程序”**，复制完成后从“应用程序”启动。模型和独立运行程序都已内置，**不需要 Homebrew、Node.js、API Key 或单独下载模型**。下载文件与安装后的 App 合计建议预留约 4 GB 磁盘空间。
 
@@ -71,7 +75,7 @@ brew install cmake
 npm run package:mac
 ```
 
-脚本会从固定源码编译独立运行程序，内置 Metal 支持，生成 `release-distribution/Voxa-0.1.2-macOS26-AppleSilicon.dmg`。详见[打包说明](docs/PACKAGING.md)。
+脚本会从固定源码编译独立运行程序，内置 Metal 支持，生成 `release-distribution/Voxa-0.2.0-macOS26-AppleSilicon.dmg`。详见[打包说明](docs/PACKAGING.md)。
 
 ## 第一次使用
 
@@ -91,7 +95,7 @@ npm run package:mac
 
 ## 隐私
 
-- 推理接口仅接受 `http://127.0.0.1:端口`，拒绝外部地址与重定向。自行配置的本地服务可能有自己的联网行为。
+- 本地模式接口仅接受 `http://127.0.0.1:端口`。可选云端模式使用 HTTPS，将音频或文字发送给所选服务，拒绝重定向。详见[云端数据流](docs/CLOUD-MODELS.md)。自行配置的本地服务可能有自己的联网行为。
 - App 不接统计或云同步，不保存原始录音文件。第三方模型服务的日志由服务自身决定。
 - 设置、词典和最多 500 条历史为本地**明文**，路径为 `~/Library/Application Support/Voiceleaf/state.json`。旧目录名用于兼容既有数据。
 - 关闭历史不删除旧记录，可以在历史页清空。剪贴板填入会改变系统剪贴板内容。

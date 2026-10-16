@@ -32,6 +32,10 @@ Voxa is an **open-source, local-first Typeless alternative** for people who want
 
 Spring navigation, microphone-level rings, hover highlights, an active-processing sweep, and a drawn completion checkmark. Respects macOS Reduce Motion. Built with the MIT-licensed [Motion](https://github.com/motiondivision/motion); see [motion design notes](docs/MOTION.md).
 
+## Optional cloud models
+
+Voxa 0.2.0 adds independently selectable cloud speech and text services. Presets include DeepSeek, Qwen, GLM, Kimi, Doubao, SiliconFlow, MiniMax, OpenAI, Groq, OpenRouter, Claude and Gemini. Keys are encrypted using macOS Keychain-backed storage. Local mode remains the default. [Setup, supported protocols and privacy](docs/CLOUD-MODELS.md).
+
 ## Why Voxa?
 
 - **Speak → clean up → write.** Local Whisper transcription plus optional Qwen text cleanup, translation, and selected-text editing.
@@ -49,7 +53,7 @@ Spring navigation, microphone-level rings, hover highlights, an active-processin
 
 ### Download for Mac
 
-**[Download Voxa for Mac — Apple Silicon, macOS 26+](https://github.com/EricHong123/voxa/releases/download/v0.1.2-alpha.1/Voxa-0.1.2-macOS26-AppleSilicon.dmg)** · [Release notes and SHA-256](https://github.com/EricHong123/voxa/releases/tag/v0.1.2-alpha.1)
+**[Download Voxa for Mac — Apple Silicon, macOS 26+](https://github.com/EricHong123/voxa/releases/download/v0.2.0-alpha.1/Voxa-0.2.0-macOS26-AppleSilicon.dmg)** · [Release notes and SHA-256](https://github.com/EricHong123/voxa/releases/tag/v0.2.0-alpha.1)
 
 Open the DMG, drag **Voxa.app into Applications**, then launch it from Applications. The installer includes both models and standalone inference servers: **no Homebrew, Node.js, API key, or separate model download is needed**. Allow about 4 GB of free disk space for the download and installed app together.
 
@@ -81,7 +85,7 @@ npm run package:mac
 npm run test:package  # requires the synthetic audio fixture described in CONTRIBUTING.md
 ```
 
-The build compiles pinned whisper.cpp and llama.cpp sources with embedded Metal support, checks archive hashes and system-only dynamic dependencies, and produces `release-distribution/Voxa-0.1.2-macOS26-AppleSilicon.dmg`. Runtime source downloads need Internet access; normal installed inference is local. See [packaging details](docs/PACKAGING.md).
+The build compiles pinned whisper.cpp and llama.cpp sources with embedded Metal support, checks archive hashes and system-only dynamic dependencies, and produces `release-distribution/Voxa-0.2.0-macOS26-AppleSilicon.dmg`. Runtime source downloads need Internet access; normal installed inference is local. See [packaging details](docs/PACKAGING.md).
 
 ### First dictation
 
@@ -113,7 +117,7 @@ See [validation notes](VALIDATION.md) for evidence and [the roadmap](docs/ROADMA
 
 Audio → AudioWorklet → Whisper (`127.0.0.1:17861`) → optional llama.cpp (`127.0.0.1:17862`) → guarded macOS input bridge.
 
-- App inference endpoints accept only literal HTTP `127.0.0.1` addresses and reject redirects. A locally configured backend can have its own network behavior.
+- Local endpoints accept only literal HTTP `127.0.0.1`. Optional cloud endpoints use HTTPS and reject redirects. Cloud use sends audio or text to your chosen service; see [data flow](docs/CLOUD-MODELS.md). A locally configured backend can have its own network behavior.
 - No app analytics or cloud synchronization. Dependencies and models require downloads during setup.
 - Raw recordings are kept in memory, not saved by the app. Third-party inference servers control their own logging.
 - Settings, dictionary, and up to 500 history items are stored as **plaintext** at `~/Library/Application Support/Voiceleaf/state.json`. The legacy directory preserves existing installations.

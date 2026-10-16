@@ -277,3 +277,9 @@ nav button.selected, .settings-nav.selected, .segmented button.active { backgrou
   .feature::after, .voice-orbit { display: none; }
   .wave i { transform: scaleY(.3) !important; }
 }
+.cloud-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 20px; }
+.cloud-service { min-width: 0; padding: 16px; border: 1px solid var(--line); border-radius: 12px; }
+.cloud-caption { font-size: 11px; color: var(--secondary); line-height: 1.8; margin-top: 12px; }
+.cloud-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.cloud-message { font-size: 12px; margin-top: 12px; padding: 10px; border-radius: 8px; background: #f1f1f3; }
+@media (max-width: 1000px) { .cloud-grid { grid-template-columns: 1fr; } }

@@ -1,6 +1,6 @@
 {
   "name": "voiceleaf",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "main": "electron/main.mjs",
@@ -18,7 +18,8 @@
     "runtimes": "node scripts/build-runtimes.mjs",
     "package:mac": "npm run runtimes && npm run native && npm run build && node scripts/package-mac.mjs",
     "test:package": "node tests/distribution.mjs",
-    "test:motion": "node tests/motion.mjs"
+    "test:motion": "node tests/motion.mjs",
+    "test:cloud": "node tests/cloud-desktop.mjs"
   },
   "dependencies": {
     "lucide-react": "1.57.0",

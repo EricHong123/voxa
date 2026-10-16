@@ -1,4 +1,6 @@
-import {app,BrowserWindow,ipcMain,globalShortcut,clipboard,dialog,systemPreferences,shell,screen,session} from 'electron';
+import {createSecrets} from './secrets.mjs';
+import {credentialId,cloudTranscribe,cloudRewrite} from './providers.mjs';
+import {app,safeStorage,BrowserWindow,ipcMain,globalShortcut,clipboard,dialog,systemPreferences,shell,screen,session} from 'electron';
 import fs from 'node:fs';
 import {setTimeout as delay} from 'node:timers/promises';
 import {LiveDraft,canStream} from './live-draft.mjs';
@@ -14,6 +16,7 @@ const exec=promisify(execFile),root=path.resolve(path.dirname(fileURLToPath(impo
 app.setPath('userData',process.env.VOICELEAF_DATA_DIR||path.join(app.getPath('appData'),'Voiceleaf'));
 app.setName('Voxa');
 const page=pathToFileURL(path.join(root,'dist/index.html')).href;
+let secrets;
 let main,hud,store,controller,target=null,phase='idle',quitting=false,modelBoot=null;
 const children=new Set();
 let liveDraft=null,liveAbort=null;
@@ -142,8 +145,8 @@ async function launchServer(kind,settings){
 async function startModels(){
  if(modelBoot)return modelBoot;
  modelBoot=(async()=>{const settings=store.read().settings,current=await health(settings);
- const jobs=[];if(!current.whisper)jobs.push(launchServer('whisper',settings));
- if(!current.rewrite&&settings.rewriteEngine==='llama'&&(settings.polish||settings.mode!=='dictate'))jobs.push(launchServer('rewrite',settings));
+ const jobs=[];if(settings.asrProvider==='local'&&!current.whisper)jobs.push(launchServer('whisper',settings));
+ if(settings.rewriteProvider==='local'&&!current.rewrite&&settings.rewriteEngine==='llama'&&(settings.polish||settings.mode!=='dictate'))jobs.push(launchServer('rewrite',settings));
  const results=await Promise.allSettled(jobs);const errors=results.filter(x=>x.status==='rejected');
  if(errors.length)throw new Error(errors.map(x=>x.reason.message).join('\n'));
  return health(settings);
@@ -157,6 +160,7 @@ function bind(name,fn,hudAllowed=false){ipcMain.handle('voiceleaf:'+name,async(e
 app.whenReady().then(async()=>{
 try{store=createStore(app.getPath('userData'));}catch(error){dialog.showErrorBox('无法读取本地数据',error.message);app.quit();}
 if(store){
+ secrets=createSecrets(app.getPath('userData'),safeStorage);
  const modelDir=app.isPackaged?path.join(process.resourcesPath,'models'):path.join(root,'models');
  const defaults={};for(const [key,file] of [['whisperModelPath','ggml-large-v3-turbo-q5_0.bin'],['rewriteModelPath','qwen2.5-1.5b-instruct-q4_k_m.gguf']])if(!store.read().settings[key]&&fs.existsSync(path.join(modelDir,file)))defaults[key]=path.join(modelDir,file);
  if(app.isPackaged){
@@ -175,6 +179,20 @@ if(store){
  createWindows();
  bind('read',()=>store.read());
  bind('settings',input=>{if(phase!=='idle')throw new Error('请结束当前录音或处理后再更改设置');const next=validateSettings({...store.read().settings,...input});registerShortcut(next.shortcut);const data=store.settings(next);broadcast();return data;});
+ const credentials=settings=>({getKey:kind=>secrets.get(credentialId(settings,kind))});
+ bind('credentialStatus',input=>{const settings=validateSettings({...store.read().settings,...input});return Object.fromEntries(['asr','rewrite'].map(kind=>[kind,secrets.has(credentialId(settings,kind))]));});
+ bind('saveCredential',(kind,input,key)=>{if(phase!=='idle')throw new Error('请先结束录音');const settings=validateSettings({...store.read().settings,...input});secrets.set(credentialId(settings,kind),key);return true;});
+ bind('testProvider',async(kind,input)=>{
+  if(phase!=='idle')throw new Error('请先结束录音');
+  const settings=validateSettings({...store.read().settings,...input}),signal=AbortSignal.timeout(30000),key=secrets.get(credentialId(settings,kind));
+  if(kind==='rewrite'){await cloudRewrite('Return only OK.','Connection test.',settings,signal,key);}
+  else if(kind==='asr'){
+   // Generated silence only: never use a microphone sample for connection testing.
+   const wav=Buffer.alloc(32044);wav.write('RIFF');wav.writeUInt32LE(32036,4);wav.write('WAVEfmt ',8);wav.writeUInt32LE(16,16);wav.writeUInt16LE(1,20);wav.writeUInt16LE(1,22);wav.writeUInt32LE(16000,24);wav.writeUInt32LE(32000,28);wav.writeUInt16LE(2,32);wav.writeUInt16LE(16,34);wav.write('data',36);wav.writeUInt32LE(32000,40);
+   await cloudTranscribe(wav,settings,[],signal,key);
+  }else throw new Error('无效服务类型');
+  return '连接测试通过（仅适用于当前配置）';
+ });
  bind('dictionary',words=>{const data=store.dictionary(words);broadcast();return data;});
  bind('remove',id=>{const data=store.remove(id);broadcast();return data;});
  bind('clear',()=>{const data=store.clear();broadcast();return data;});
@@ -189,6 +207,7 @@ if(store){
   const active=new AbortController();previewController=active;
   try{
    const {settings,dictionary}=store.read();
+   if(settings.asrProvider!=='local')return null;
    const text=await transcribeAudio(input,settings,dictionary,AbortSignal.any([active.signal,AbortSignal.timeout(12000)]));
    if(!active.signal.aborted&&phase==='recording'){
     send({type:'preview',text});
@@ -210,7 +229,7 @@ if(store){
   await sessionDraft?.queue;active.signal.throwIfAborted();
   const capturedTarget=target;const {settings,dictionary}=store.read();
   try {
-   const result=await processAudio(input,settings,dictionary,active.signal,setPhase,{selectedText:capturedTarget?.selectedText,onTranscript:text=>send({type:'preview',text,final:true})});active.signal.throwIfAborted();
+   const result=await processAudio(input,settings,dictionary,active.signal,setPhase,{...credentials(settings),selectedText:capturedTarget?.selectedText,onTranscript:text=>send({type:'preview',text,final:true})});active.signal.throwIfAborted();
    send({type:'revision',value:{original:result.original,text:result.text,warning:result.warning}});
    store.add(result);lastHudText=result.text;broadcast();
    let deliveryStatus='retained';
