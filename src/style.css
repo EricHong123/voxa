@@ -87,8 +87,8 @@ main { flex: 1; min-width: 0; margin-left: 216px; }
 .record-center h2 { font-size: 22px; letter-spacing: -.5px; font-weight: 500; margin-top: 18px; }
 .record-center p { font-size: 11px; color: #76767c; margin-top: 8px; }
 .wave { display: flex; align-items: center; justify-content: center; gap: 4px; height: 48px; margin-top: 9px; }
-.wave i { width: 2px; border-radius: 3px; background: #b7b7bd; opacity: .65; transition: height 100ms ease; }
-.wave.active i { background: #3a3a40; opacity: 1; animation: breathe 800ms ease-in-out infinite alternate; }
+.wave i { width: 2px; border-radius: 3px; background: #b7b7bd; opacity: .65; }
+.wave.active i { background: #3a3a40; opacity: 1; }
 .shortcut { display: flex; align-items: center; gap: 9px; font-size: 10px; color: #79797f; }
 kbd { font-family: inherit; border: 1px solid #dddde2; border-bottom-width: 2px; background: #fafafa; color: #66666d; border-radius: 5px; padding: 4px 8px; font-size: 10px; }
 .panel-bottom { display: flex; align-items: center; justify-content: space-between; padding: 13px 22px; border-top: 1px solid #eeeeef; color: #707077; font-size: 10px; }
@@ -187,7 +187,6 @@ kbd { font-family: inherit; border: 1px solid #dddde2; border-bottom-width: 2px;
 .switch { justify-content: flex-start; width: 36px; height: 22px; flex-shrink: 0; padding: 3px; border-radius: 20px; background: #d9d9df; }
 .switch span { width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px #00000024; transition: transform 180ms ease; }
 .switch.on { background: #38383f; }
-.switch.on span { transform: translateX(14px); }
 .permission-box { display: flex; align-items: center; gap: 12px; padding: 15px; margin-top: 22px; border-radius: 9px; background: #f4f4f6; color: #65656f; font-size: 11px; }
 .permission-box span { flex: 1; }
 .permission-box small { display: block; margin-top: 5px; font-size: 10px; color: #7b7b85; }
@@ -199,7 +198,6 @@ kbd { font-family: inherit; border: 1px solid #dddde2; border-bottom-width: 2px;
 body:has(.hud), :root:has(.hud) { background: transparent; }
 .spin { animation: rotate 1s linear infinite; }
 @keyframes rotate { to { transform: rotate(360deg); } }
-@keyframes breathe { to { transform: scaleY(.65); } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 @media (prefers-reduced-transparency: reduce) { .hud { background: #242427; } .topbar { background: #fafafa; } }
 @media (max-width: 1000px) {
@@ -247,3 +245,35 @@ body:has(.hud), :root:has(.hud) { background: transparent; }
 @keyframes words-out { to { opacity: .2; } }
 @media (prefers-reduced-motion: reduce) { .hud * { animation: none !important; transition: none !important; } }
 @media (prefers-reduced-transparency: reduce) { .hud { background: #252527; } }
+
+/* Motion surfaces: transform/opacity only; never delay voice controls. */
+nav button, .settings-nav, .segmented button { position: relative; isolation: isolate; }
+nav button.selected, .settings-nav.selected, .segmented button.active { background: transparent; box-shadow: none; }
+.selection-surface { position: absolute; inset: 0; border-radius: inherit; background: #dedee2; z-index: -1; pointer-events: none; }
+.segmented .selection-surface { background: #fff; box-shadow: 0 1px 4px #00000014; }
+.record-halo { position: relative; isolation: isolate; }
+.voice-orbit { position: absolute; inset: 0; border: 1px solid #57575d; border-radius: 50%; pointer-events: none; z-index: -1; }
+.record-button { position: relative; }
+.wave i { height: 48px; transition: transform 110ms ease-out, opacity 180ms ease; }
+.wave.active i { animation: none; }
+.switch span { transition: none; }
+.switch.on span { transform: none; }
+.stage-heading { animation: stage-arrive .28s ease-out; }
+@keyframes stage-arrive { from { opacity: .5; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+.feature { position: relative; overflow: hidden; }
+.feature::after { content: ''; position: absolute; inset: 0; background: linear-gradient(105deg,transparent 30%,#ffffffa0 50%,transparent 70%); transform: translateX(-110%); pointer-events: none; }
+.feature:hover::after { animation: card-sheen .65s ease-out; }
+@keyframes card-sheen { to { transform: translateX(110%); } }
+.toast { translate: -50% 0; transform: none; }
+.hud { position: relative; overflow: hidden; }
+.hud::after { content: ''; position: absolute; bottom: 0; left: 0; width: 35%; height: 1px; background: linear-gradient(90deg,transparent,#ffffff99,transparent); opacity: 0; pointer-events: none; }
+.hud.phase-transcribing::after, .hud.phase-polishing::after, .hud.phase-pasting::after, .hud.phase-sending::after { opacity: 1; animation: process-sweep 1.7s ease-in-out infinite; }
+@keyframes process-sweep { from { transform: translateX(-100%); } to { transform: translateX(390%); } }
+.listening-bars { display: flex; width: 22px; height: 24px; gap: 2px; align-items: center; justify-content: center; }
+.listening-bars i { display: block; width: 2px; height: var(--bar-height); background: currentColor; border-radius: 2px; animation: listening-wave .85s ease-in-out infinite alternate; animation-delay: var(--bar-delay); }
+@keyframes listening-wave { from { transform: scaleY(.45); opacity: .6; } to { transform: scaleY(1); opacity: 1; } }
+.hud-feedback { animation: stage-arrive .25s ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .feature::after, .voice-orbit { display: none; }
+  .wave i { transform: scaleY(.3) !important; }
+}

@@ -1,5 +1,6 @@
 import React,{useEffect,useRef,useState} from 'react';
-import {AudioLines,Square,Check,LoaderCircle,X,Copy,AlertCircle} from 'lucide-react';
+import {AudioLines,Square,LoaderCircle,X,Copy,AlertCircle} from 'lucide-react';
+import {SuccessMark,ListeningMark} from './Motion.jsx';
 import {revisionParts} from './revision.mjs';
 const bridge=window.voiceleaf;
 async function api(name,...args){const result=await bridge[name](...args);if(!result.ok)throw new Error(result.error);return result.value;}
@@ -25,8 +26,8 @@ export default function HUD(){
  const title=phase==='idle'?(status==='manual-enter'?'已填入，请手动发送':status==='inserted'?'已填入':status==='enter-posted'?'已按 Enter':status==='unverified'?'请确认输入结果':canCopy?'文字已保留':'已结束'):stages[phase]||'正在处理';
  let prefix=0;while(prefix<previous.length&&prefix<text.length&&previous[prefix]===text[prefix])prefix++;
  const fail=e=>setError(e.message);
- return <section className={'hud '+(hasText?'expanded':'compact')} aria-label="Voxa 语音浮窗">
-  <div className="hud-toolbar"><span className={'hud-symbol '+(phase==='recording'?'listening':'')}>{phase==='idle'&&success?<Check size={20}/>:<AudioLines size={20}/>}</span><div className="hud-heading"><strong role="status">{title}</strong>{target?.ready&&phase!=='idle'&&<small>输入到 {target.name}</small>}</div>
+ return <section className={'hud '+(hasText?'expanded':'compact')+' phase-'+phase} aria-label="Voxa 语音浮窗">
+  <div className="hud-toolbar"><span className="hud-symbol">{phase==='idle'&&success?<SuccessMark/>:phase==='recording'?<ListeningMark/>:<AudioLines size={20}/>}</span><div className="hud-heading"><strong role="status">{title}</strong>{target?.ready&&phase!=='idle'&&<small>输入到 {target.name}</small>}</div>
    {phase==='recording'?<button aria-label="停止录音" title="完成本轮听写" onClick={()=>api('toggle').catch(fail)}><Square size={13} fill="currentColor"/></button>:phase!=='idle'&&<LoaderCircle className="spin" size={16} aria-label="处理中"/>}
    <button aria-label="取消" title="取消尚未填入的内容 · Esc" onClick={()=>api('cancel').catch(fail)}><X size={17}/></button>
   </div>

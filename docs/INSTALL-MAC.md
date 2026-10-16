@@ -2,7 +2,7 @@
 
 This alpha DMG requires **Apple Silicon (M-series) and macOS 26 or newer**. Intel Macs and older macOS versions are not supported by this build.
 
-1. Download `Voxa-0.1.1-macOS26-AppleSilicon.dmg` from https://github.com/EricHong123/voxa/releases/tag/v0.1.1-alpha.1 .
+1. Download `Voxa-0.1.2-macOS26-AppleSilicon.dmg` from https://github.com/EricHong123/voxa/releases/tag/v0.1.2-alpha.1 .
 2. Open the DMG and drag **Voxa.app → Applications**. Wait for copying to finish, then eject the disk image.
 3. Launch Voxa from Applications, not from the mounted disk image. Local model loading can take time on first launch.
 4. Allow microphone access when asked. For text insertion, enable Voxa in System Settings → Privacy & Security → Accessibility.

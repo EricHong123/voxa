@@ -24,6 +24,14 @@ Voxa is an **open-source, local-first Typeless alternative** for people who want
 
 *Actual application UI from a clean test profile. No private dictation history is shown.*
 
+## A quieter interface, with a little life
+
+![Voxa floating panel animation demo](docs/assets/motion-demo.gif)
+
+*Staged UI sequence with sample text, not a recognition-speed or cross-app delivery benchmark. Available in v0.1.2.*
+
+Spring navigation, microphone-level rings, hover highlights, an active-processing sweep, and a drawn completion checkmark. Respects macOS Reduce Motion. Built with the MIT-licensed [Motion](https://github.com/motiondivision/motion); see [motion design notes](docs/MOTION.md).
+
 ## Why Voxa?
 
 - **Speak → clean up → write.** Local Whisper transcription plus optional Qwen text cleanup, translation, and selected-text editing.
@@ -41,7 +49,7 @@ Voxa is an **open-source, local-first Typeless alternative** for people who want
 
 ### Download for Mac
 
-**[Download Voxa for Mac — Apple Silicon, macOS 26+](https://github.com/EricHong123/voxa/releases/download/v0.1.1-alpha.1/Voxa-0.1.1-macOS26-AppleSilicon.dmg)** · [Release notes and SHA-256](https://github.com/EricHong123/voxa/releases/tag/v0.1.1-alpha.1)
+**[Download Voxa for Mac — Apple Silicon, macOS 26+](https://github.com/EricHong123/voxa/releases/download/v0.1.2-alpha.1/Voxa-0.1.2-macOS26-AppleSilicon.dmg)** · [Release notes and SHA-256](https://github.com/EricHong123/voxa/releases/tag/v0.1.2-alpha.1)
 
 Open the DMG, drag **Voxa.app into Applications**, then launch it from Applications. The installer includes both models and standalone inference servers: **no Homebrew, Node.js, API key, or separate model download is needed**. Allow about 4 GB of free disk space for the download and installed app together.
 
@@ -73,7 +81,7 @@ npm run package:mac
 npm run test:package  # requires the synthetic audio fixture described in CONTRIBUTING.md
 ```
 
-The build compiles pinned whisper.cpp and llama.cpp sources with embedded Metal support, checks archive hashes and system-only dynamic dependencies, and produces `release-distribution/Voxa-0.1.1-macOS26-AppleSilicon.dmg`. Runtime source downloads need Internet access; normal installed inference is local. See [packaging details](docs/PACKAGING.md).
+The build compiles pinned whisper.cpp and llama.cpp sources with embedded Metal support, checks archive hashes and system-only dynamic dependencies, and produces `release-distribution/Voxa-0.1.2-macOS26-AppleSilicon.dmg`. Runtime source downloads need Internet access; normal installed inference is local. See [packaging details](docs/PACKAGING.md).
 
 ### First dictation
 

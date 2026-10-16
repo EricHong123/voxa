@@ -5,6 +5,7 @@ The MIT license at the repository root applies to Voxa's own code and documentat
 | Component | Source / license reference |
 | --- | --- |
 | Electron | https://github.com/electron/electron/blob/main/LICENSE |
+| Motion (React animations) | https://github.com/motiondivision/motion/blob/main/LICENSE.md — MIT; copies in `licenses/Motion-MIT.txt` (motion, motion-dom, motion-utils) and `licenses/Framer-Motion-MIT.txt` (framer-motion engine) |
 | React | https://github.com/facebook/react/blob/main/LICENSE |
 | Lucide icons | https://github.com/lucide-icons/lucide/blob/main/LICENSE |
 | whisper.cpp runtime / converted Whisper models | https://github.com/ggml-org/whisper.cpp and https://huggingface.co/ggerganov/whisper.cpp |

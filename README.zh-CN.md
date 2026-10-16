@@ -17,6 +17,14 @@ Voxa 是面向 macOS 的本地优先语音输入工具：把口述变成文字�
 
 ![Voxa 主界面，使用空白测试资料](docs/assets/home.png)
 
+## 黑白界面，也有呼吸感
+
+![Voxa 浮窗动效演示](docs/assets/motion-demo.gif)
+
+*使用示例文字演示 UI 状态，不代表实测识别速度或跨软件填入结果。v0.1.2 起提供。*
+
+弹簧导航、随麦克风音量变化的光环、卡片悬停高光、处理流光、完成勾选描画。支持 macOS「减少动态效果」，录音与取消立即响应。基于 MIT 开源项目 [Motion](https://github.com/motiondivision/motion)，详见[动效设计说明](docs/MOTION.md)。
+
 ## 能做什么
 
 - **说完即整理**：Whisper 识别，Qwen 本地去口头禅与标点整理；也支持翻译、选中文字后语音编辑。
@@ -32,7 +40,7 @@ Voxa 是面向 macOS 的本地优先语音输入工具：把口述变成文字�
 
 ## 安装
 
-**[下载 Voxa Mac 安装包（Apple Silicon / macOS 26+）](https://github.com/EricHong123/voxa/releases/download/v0.1.1-alpha.1/Voxa-0.1.1-macOS26-AppleSilicon.dmg)** · [版本说明与 SHA-256](https://github.com/EricHong123/voxa/releases/tag/v0.1.1-alpha.1)
+**[下载 Voxa Mac 安装包（Apple Silicon / macOS 26+）](https://github.com/EricHong123/voxa/releases/download/v0.1.2-alpha.1/Voxa-0.1.2-macOS26-AppleSilicon.dmg)** · [版本说明与 SHA-256](https://github.com/EricHong123/voxa/releases/tag/v0.1.2-alpha.1)
 
 打开 DMG，把 **Voxa.app 拖到“应用程序”**，复制完成后从“应用程序”启动。模型和独立运行程序都已内置，**不需要 Homebrew、Node.js、API Key 或单独下载模型**。下载文件与安装后的 App 合计建议预留约 4 GB 磁盘空间。
 
@@ -63,7 +71,7 @@ brew install cmake
 npm run package:mac
 ```
 
-脚本会从固定源码编译独立运行程序，内置 Metal 支持，生成 `release-distribution/Voxa-0.1.1-macOS26-AppleSilicon.dmg`。详见[打包说明](docs/PACKAGING.md)。
+脚本会从固定源码编译独立运行程序，内置 Metal 支持，生成 `release-distribution/Voxa-0.1.2-macOS26-AppleSilicon.dmg`。详见[打包说明](docs/PACKAGING.md)。
 
 ## 第一次使用
 
