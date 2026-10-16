@@ -1,0 +1,51 @@
+name: Build Mac installer
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing draft release tag to receive the installer
+        required: true
+        default: v0.1.1-alpha.1
+permissions:
+  contents: write
+concurrency:
+  group: mac-installer
+  cancel-in-progress: false
+jobs:
+  package:
+    runs-on: macos-26
+    timeout-minutes: 45
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_TAG: ${{ inputs.release_tag }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Verify runner and draft destination
+        run: |
+          test "$(uname -m)" = arm64
+          gh release view "$RELEASE_TAG" --json isDraft --jq .isDraft | grep -qx true
+          cmake --version
+      - run: npm ci
+      - run: npm test
+      - run: npm run models
+      - run: npm run package:mac
+      - name: Verify bundled inference
+        run: |
+          mkdir -p artifacts
+          cp tests/fixtures/package-speech.wav artifacts/test-speech.wav
+          npm run test:package
+      - name: Upload verified installer to draft
+        run: |
+          gh release view "$RELEASE_TAG" --json isDraft --jq .isDraft | grep -qx true
+          gh release upload "$RELEASE_TAG" release-distribution/*.dmg release-distribution/SHA256SUMS.txt --clobber
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: package-verification
+          path: artifacts/distribution-results.json
+          if-no-files-found: ignore
