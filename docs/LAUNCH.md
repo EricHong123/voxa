@@ -10,7 +10,7 @@ Open-source Typeless alternative for macOS. Local-first Whisper dictation, on-de
 
 Voxa 是一个 macOS 本地语音输入实验：Whisper 做识别，Qwen 整理口头禅与标点，黑白小浮窗显示转录和删改。无需云端 API Key，源码 MIT 开源。
 
-目前还是 Alpha，需要从源码安装；跨 App 实时填入正在验证，暂不承诺“所有软件通用”。如果你愿意试一个普通输入框，欢迎提交兼容性反馈。
+目前还是 Alpha，提供 Apple Silicon / macOS 26+ 的未公证 DMG；跨 App 实时填入正在验证，暂不承诺“所有软件通用”。如果你愿意试一个普通输入框，欢迎提交兼容性反馈。
 
 源码：https://github.com/EricHong123/voxa
 
@@ -20,7 +20,7 @@ Title: Voxa: an open-source, local-first Typeless alternative for macOS
 
 I'm building Voxa, a local voice dictation app with Whisper recognition, optional on-device text cleanup, and a small floating transcript panel. MIT licensed; no Voxa account or cloud API key required.
 
-It's an early source-install alpha. Live draft replacement is experimental and app compatibility needs real-world testing. I'd especially welcome reproducible reports for plain text fields and contenteditable editors.
+It's an early alpha with an unnotarized, self-contained DMG for Apple Silicon / macOS 26+. Live draft replacement is experimental and app compatibility needs real-world testing. I'd especially welcome reproducible reports for plain text fields and contenteditable editors.
 
 Repository: https://github.com/EricHong123/voxa
 

@@ -13,7 +13,7 @@
 
 Voxa 是面向 macOS 的本地优先语音输入工具：把口述变成文字，再用本地模型整理语气词、标点与表达。适合正在寻找 **Typeless 开源替代版、Mac 本地语音输入、离线语音转文字** 的开发者和早期体验者。无需 Voxa 账号、订阅或云端 API Key。
 
-> **当前为实验性 Alpha，需从源码安装。** 实时写回依赖目标软件的辅助功能支持，尚未验证所有 App 和网页。它不是 Typeless 官方版本，也不承诺同等准确率、速度或完整功能。
+> **当前为实验性 Alpha，提供内置模型的 Mac 安装包。** 实时写回依赖目标软件的辅助功能支持，尚未验证所有 App 和网页。它不是 Typeless 官方版本，也不承诺同等准确率、速度或完整功能。
 
 ![Voxa 主界面，使用空白测试资料](docs/assets/home.png)
 
@@ -32,7 +32,15 @@ Voxa 是面向 macOS 的本地优先语音输入工具：把口述变成文字�
 
 ## 安装
 
-需要 Apple Silicon Mac、Git、Node.js **22.12+**、npm、Homebrew 和 Xcode Command Line Tools。开发验证机器为 M5 / 24 GB，不代表最低配置。模型下载约 **1.84 GB**，还需预留依赖与打包空间。
+**[下载 Voxa Mac 安装包（Apple Silicon / macOS 26+）](https://github.com/EricHong123/voxa/releases/download/v0.1.1-alpha.1/Voxa-0.1.1-macOS26-AppleSilicon.dmg)** · [版本说明与 SHA-256](https://github.com/EricHong123/voxa/releases/tag/v0.1.1-alpha.1)
+
+打开 DMG，把 **Voxa.app 拖到“应用程序”**，复制完成后从“应用程序”启动。模型和独立运行程序都已内置，**不需要 Homebrew、Node.js、API Key 或单独下载模型**。下载文件与安装后的 App 合计建议预留约 4 GB 磁盘空间。
+
+本包只支持 M 系列芯片、macOS 26 及以上。当前为 **ad-hoc 签名、未公证的 Alpha**，首次打开可能被 macOS 拦截；请核对来源后参照[安装说明](docs/INSTALL-MAC.md)及 [Apple 官方指引](https://support.apple.com/en-us/102445)操作。开发验证设备是 M5 / 24 GB，不代表最低内存要求。
+
+### 从源码运行
+
+开发者需要 Git、Node.js 22.12+、npm、Homebrew、Xcode Command Line Tools：
 
 ```sh
 xcode-select --install  # 已安装可跳过
@@ -46,16 +54,16 @@ npm run native
 npm start
 ```
 
-下载脚本使用固定 Hugging Face revision，目前检查文件大小，未在脚本内校验加密哈希。首次安装需要联网；模型就绪后，默认语音识别与文字整理在本机完成。
+源码开发使用 Homebrew 模型服务，模型下载约 1.84 GB。首次安装需联网；默认推理在本机运行。
 
-打包成本机 App：
+构建可分发 DMG：
 
 ```sh
-npm run pack
-open release/mac-arm64/Voxa.app
+brew install cmake
+npm run package:mac
 ```
 
-**目前没有开箱即用的公证安装包。** whisper-server / llama-server 仍依赖 Homebrew；本机 ad-hoc 签名在重新打包后可能导致辅助功能授权失效。
+脚本会从固定源码编译独立运行程序，内置 Metal 支持，生成 `release-distribution/Voxa-0.1.1-macOS26-AppleSilicon.dmg`。详见[打包说明](docs/PACKAGING.md)。
 
 ## 第一次使用
 

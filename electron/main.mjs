@@ -2,6 +2,7 @@ import {app,BrowserWindow,ipcMain,globalShortcut,clipboard,dialog,systemPreferen
 import fs from 'node:fs';
 import {setTimeout as delay} from 'node:timers/promises';
 import {LiveDraft,canStream} from './live-draft.mjs';
+import {resolveRuntime} from './runtime.mjs';
 import {pressEnterAfterPaste,targetProblem,pasteProblem,verifyPaste,splitEnterCommand} from './delivery.mjs';
 import path from 'node:path';
 import {fileURLToPath,pathToFileURL} from 'node:url';
@@ -120,7 +121,7 @@ function registerShortcut(value){
  if(!globalShortcut.register(value,()=>void toggle(true)))throw new Error('快捷键已被占用，请选择另一个组合。');
  if(previous!==value)globalShortcut.unregister(previous);
 }
-function executable(name){for(const p of ['/opt/homebrew/bin/'+name,'/usr/local/bin/'+name])if(fs.existsSync(p))return p;throw new Error(`没有找到 ${name}。请先安装对应的本地模型运行环境。`);}
+function executable(name){return resolveRuntime(name,{packaged:app.isPackaged,resourcesPath:process.resourcesPath});}
 async function launchServer(kind,settings){
  const isWhisper=kind==='whisper';
  const model=isWhisper?settings.whisperModelPath:settings.rewriteModelPath;

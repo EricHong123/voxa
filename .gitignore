@@ -17,3 +17,5 @@ artifacts/
 coverage/
 playwright-report/
 test-results/
+runtime/
+release-distribution/

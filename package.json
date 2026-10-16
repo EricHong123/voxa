@@ -1,6 +1,6 @@
 {
   "name": "voiceleaf",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "main": "electron/main.mjs",
@@ -11,10 +11,13 @@
     "native": "swiftc native/Bridge.swift -o native/voiceleaf-bridge -framework AppKit -framework ApplicationServices",
     "test": "node --test tests/*.test.mjs",
     "test:desktop": "node tests/desktop.mjs",
-    "pack": "npm run native && npm run build && electron-builder --mac dir && node scripts/sign-local.mjs",
+    "pack": "npm run runtimes && npm run native && npm run build && electron-builder --mac dir && node scripts/sign-local.mjs",
     "models": "node scripts/download-models.mjs",
     "test:models": "node tests/local-models.mjs",
-    "test:recording": "node tests/recording.mjs"
+    "test:recording": "node tests/recording.mjs",
+    "runtimes": "node scripts/build-runtimes.mjs",
+    "package:mac": "npm run runtimes && npm run native && npm run build && node scripts/package-mac.mjs",
+    "test:package": "node tests/distribution.mjs"
   },
   "dependencies": {
     "lucide-react": "1.57.0",
@@ -44,9 +47,25 @@
         "from": "models",
         "to": "models",
         "filter": [
-          "*.bin",
-          "*.gguf"
+          "ggml-large-v3-turbo-q5_0.bin",
+          "qwen2.5-1.5b-instruct-q4_k_m.gguf"
         ]
+      },
+      {
+        "from": "runtime",
+        "to": "runtime"
+      },
+      {
+        "from": "licenses",
+        "to": "licenses"
+      },
+      {
+        "from": "LICENSE",
+        "to": "LICENSE"
+      },
+      {
+        "from": "THIRD_PARTY_NOTICES.md",
+        "to": "THIRD_PARTY_NOTICES.md"
       }
     ],
     "mac": {
@@ -55,7 +74,8 @@
       "extendInfo": {
         "NSMicrophoneUsageDescription": "Voxa 使用麦克风在本机识别你的语音。"
       },
-      "icon": "build/icon.icns"
+      "icon": "build/icon.icns",
+      "minimumSystemVersion": "26.0"
     },
     "directories": {
       "output": "release"

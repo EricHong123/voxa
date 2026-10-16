@@ -18,7 +18,7 @@ Local-first AI voice dictation with Whisper, on-device text cleanup, and a quiet
 
 Voxa is an **open-source, local-first Typeless alternative** for people who want to speak instead of type and run the models on their own Mac. No Voxa account, subscription, or cloud API key is required. Install the dependencies and download the models once; the bundled workflow performs inference locally.
 
-**Early alpha, source installation only.** Input delivery depends on each app's Accessibility support. Live draft replacement is experimental; universal app compatibility and Typeless feature parity are not claimed. The interface is currently Chinese; English documentation is provided below.
+**Early alpha. A self-contained macOS installer is available below.** Input delivery depends on each app's Accessibility support. Live draft replacement is experimental; universal app compatibility and Typeless feature parity are not claimed. The interface is currently Chinese; English documentation is provided below.
 
 ![Voxa macOS interface with an empty test profile](docs/assets/home.png)
 
@@ -39,9 +39,17 @@ Voxa is an **open-source, local-first Typeless alternative** for people who want
 
 ## Get started
 
-Target: **macOS on Apple Silicon**. Development has been exercised on an M5 Mac with 24 GB RAM; this is not a minimum hardware requirement. Intel Macs, Windows, and Linux are not validated.
+### Download for Mac
 
-Prerequisites: Git, Node.js **22.12+**, npm, Xcode Command Line Tools, and [Homebrew](https://brew.sh/). Model downloads total roughly **1.84 GB**; allow extra space for dependencies and the packaged app.
+**[Download Voxa for Mac — Apple Silicon, macOS 26+](https://github.com/EricHong123/voxa/releases/download/v0.1.1-alpha.1/Voxa-0.1.1-macOS26-AppleSilicon.dmg)** · [Release notes and SHA-256](https://github.com/EricHong123/voxa/releases/tag/v0.1.1-alpha.1)
+
+Open the DMG, drag **Voxa.app into Applications**, then launch it from Applications. The installer includes both models and standalone inference servers: **no Homebrew, Node.js, API key, or separate model download is needed**. Allow about 4 GB of free disk space for the download and installed app together.
+
+This is an **ad-hoc signed, unnotarized alpha**. macOS may block the first launch; see [installation and signing details](docs/INSTALL-MAC.md) and [Apple's guidance](https://support.apple.com/en-us/102445). Intel Macs and macOS versions before 26 are not supported by this binary. Development validation is on an M5 / 24 GB Mac, not a minimum-memory specification.
+
+### Build from source
+
+Prerequisites: Git, Node.js **22.12+**, npm, Xcode Command Line Tools, and [Homebrew](https://brew.sh/).
 
 ```sh
 xcode-select --install  # skip if already installed
@@ -55,16 +63,17 @@ npm run native
 npm start
 ```
 
-The downloader uses pinned Hugging Face revisions and requires Internet access. It currently validates file size, not a cryptographic checksum. Runtime binaries are provided by Homebrew, not bundled by Voxa. The app looks for `whisper-server` and `llama-server` in `/opt/homebrew/bin` and `/usr/local/bin`.
+The source-development app uses Homebrew servers. Model downloads total roughly 1.84 GB. The downloader pins Hugging Face revisions and checks file size; the distribution additionally pins and checks the two included models' SHA-256 hashes.
 
-For a local app bundle:
+To build the self-contained DMG on an Apple Silicon Mac with macOS 26+:
 
 ```sh
-npm run pack
-open release/mac-arm64/Voxa.app
+brew install cmake
+npm run package:mac
+npm run test:package  # requires the synthetic audio fixture described in CONTRIBUTING.md
 ```
 
-This produces an **ad-hoc signed development bundle**, not a notarized one-click installer. Rebuilding can invalidate macOS Accessibility authorization. Keep a stable app path and follow [permission recovery](docs/TROUBLESHOOTING.md) after updates. There is no published prebuilt download yet.
+The build compiles pinned whisper.cpp and llama.cpp sources with embedded Metal support, checks archive hashes and system-only dynamic dependencies, and produces `release-distribution/Voxa-0.1.1-macOS26-AppleSilicon.dmg`. Runtime source downloads need Internet access; normal installed inference is local. See [packaging details](docs/PACKAGING.md).
 
 ### First dictation
 
@@ -87,7 +96,7 @@ Voxa periodically submits an audio snapshot, with a 1.2-second scheduling interv
 | Final input delivery | Guarded native implementation; a user confirmed one fixed-text insertion |
 | Live input replacement | Experimental; unit coverage, broad real-app verification pending |
 | Voice-to-Enter | Opt-in; guarded; no guarantee of remote message delivery |
-| Native one-click distribution | Planned; dependencies and ad-hoc signing remain |
+| Downloadable macOS DMG | Models and runtimes included; Apple Silicon / macOS 26+; not notarized |
 | Continuous listening after each completed segment | Planned |
 
 See [validation notes](VALIDATION.md) for evidence and [the roadmap](docs/ROADMAP.md) for priorities.

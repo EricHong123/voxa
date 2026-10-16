@@ -1,6 +1,6 @@
 # Third-party software and models
 
-The MIT license at the repository root applies to Voxa's own code and documentation. It does not relicense dependencies, model weights, or trademarks. This source repository does not bundle model weights or third-party inference executables.
+The MIT license at the repository root applies to Voxa's own code and documentation. It does not relicense dependencies, model weights, or trademarks. Git does not contain model weights or inference binaries. Release DMGs include the two models and statically built whisper.cpp/llama.cpp servers. Model licenses are in `Contents/Resources/licenses`; runtime licenses, vendored notices, and source provenance are in `Contents/Resources/runtime`.
 
 | Component | Source / license reference |
 | --- | --- |

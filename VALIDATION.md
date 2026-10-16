@@ -99,3 +99,9 @@ Native updates use AXSelectedText when available, or range-guarded clipboard pas
 The main record button now offers a five-second target-selection countdown in live mode; the global shortcut captures the destination before showing the HUD. Added a fixed-text live test (明天 → 明天九点开会 → 明天十点开会。), with no Enter key.
 
 Validation: 22 unit tests, native compilation, production build, desktop countdown/cancellation regressions and synthetic microphone pipeline passed. Unit tests exercise preservation of surrounding text/emoji, ordered revisions, cursor/focus/manual-edit interference, cancellation and native refusal. Native cross-app live revisions still require real UI verification after authorization of the new signed bundle.
+
+## Self-contained distribution — 2026-10-16
+
+Voxa 0.1.1 packages statically built whisper.cpp v1.9.4 and llama.cpp commit 7fe450e19305b828c199d602c23a8337aaa1f03b, embedded Metal support, and the two default models. Packaged execution resolves only app-local runtime binaries and fails explicitly if incomplete; source development retains Homebrew lookup. Builds target arm64 / macOS 26.0 and do not use host-specific CPU tuning. Source archives and the bundled model files are pinned and SHA-256 checked. Runtime/model licenses and vendor notices are included.
+
+25 unit tests pass, including bundled runtime resolution, missing-runtime refusal and development fallback. The distribution integration test uses an isolated profile and ports, PATH without Homebrew, verifies system-only dylib dependencies and code signatures, starts the packaged models and performs synthetic-audio recognition plus text cleanup. The test does not claim another physical Mac, Gatekeeper acceptance, real microphone accuracy or external-input compatibility. Release remains ad-hoc signed and unnotarized.

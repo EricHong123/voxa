@@ -26,6 +26,7 @@ Accessibility automation may visually focus a field without changing the applica
 
 ## 模型未连接 / Models unavailable
 
+- For the downloadable DMG: reinstall the complete app if bundled models or runtimes are missing. Homebrew is not required. The following commands apply only to source-development installations.
 - Run `npm run models` and confirm the downloads finish.
 - Run `command -v whisper-server` and `command -v llama-server`. Install `whisper.cpp` and `llama.cpp` using Homebrew if missing.
 - Supported runtime locations are `/opt/homebrew/bin` and `/usr/local/bin`.
