@@ -1,0 +1,6 @@
+const {contextBridge, ipcRenderer}=require('electron');
+const invoke=(name)=>(...args)=>ipcRenderer.invoke('voiceleaf:'+name,...args);
+contextBridge.exposeInMainWorld('voiceleaf',{
+ hudSize:invoke('hudSize'),chooseRecordingTarget:invoke('chooseRecordingTarget'),testLiveInsertion:invoke('testLiveInsertion'),testInsertion:invoke('testInsertion'),retryInsertion:invoke('retryInsertion'),read:invoke('read'),settings:invoke('settings'),dictionary:invoke('dictionary'),remove:invoke('remove'),clear:invoke('clear'),health:invoke('health'),chooseModel:invoke('chooseModel'),startModels:invoke('startModels'),process:invoke('process'),preview:invoke('preview'),cancel:invoke('cancel'),copy:invoke('copy'),copyHudResult:invoke('copyHudResult'),permissions:invoke('permissions'),openAccessibility:invoke('openAccessibility'),exportHistory:invoke('exportHistory'),toggle:invoke('toggle'),state:invoke('state'),show:invoke('show'),
+ on:(callback)=>{const fn=(_event,message)=>callback(message);ipcRenderer.on('voiceleaf:event',fn);return()=>ipcRenderer.removeListener('voiceleaf:event',fn);}
+});

@@ -1,0 +1,39 @@
+name: Input compatibility / 输入兼容性
+description: Report an input field that fails to receive or revise text.
+title: '[Compatibility] '
+body:
+  - type: markdown
+    attributes:
+      value: 'Use disposable text. Do not include private chats, credentials, or full profile/log dumps.'
+  - type: input
+    id: environment
+    attributes:
+      label: macOS, chip, Voxa commit/version
+    validations:
+      required: true
+  - type: input
+    id: app
+    attributes:
+      label: Target app/browser and version; field type
+      placeholder: Safari / version / plain textarea
+    validations:
+      required: true
+  - type: dropdown
+    id: stage
+    attributes:
+      label: Where does it fail?
+      options:
+        - Shortcut does not start recording
+        - Transcript appears but nothing is inserted
+        - First insertion works but revisions fail
+        - Manual editing or focus change is not respected
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps, expected behavior, actual result, HUD message
+      description: Include results of the fixed-text test and live-input test. Redact private content.
+    validations:
+      required: true

@@ -1,0 +1,81 @@
+{
+  "name": "voiceleaf",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "electron/main.mjs",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "start": "npm run build && electron .",
+    "native": "swiftc native/Bridge.swift -o native/voiceleaf-bridge -framework AppKit -framework ApplicationServices",
+    "test": "node --test tests/*.test.mjs",
+    "test:desktop": "node tests/desktop.mjs",
+    "pack": "npm run native && npm run build && electron-builder --mac dir && node scripts/sign-local.mjs",
+    "models": "node scripts/download-models.mjs",
+    "test:models": "node tests/local-models.mjs",
+    "test:recording": "node tests/recording.mjs"
+  },
+  "dependencies": {
+    "lucide-react": "1.57.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "electron": "44.7.2",
+    "electron-builder": "26.15.3",
+    "vite": "8.3.4"
+  },
+  "build": {
+    "appId": "local.voiceleaf.desktop",
+    "productName": "Voxa",
+    "files": [
+      "dist/**",
+      "electron/**",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "native/voiceleaf-bridge",
+        "to": "voiceleaf-bridge"
+      },
+      {
+        "from": "models",
+        "to": "models",
+        "filter": [
+          "*.bin",
+          "*.gguf"
+        ]
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "identity": null,
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "Voxa 使用麦克风在本机识别你的语音。"
+      },
+      "icon": "build/icon.icns"
+    },
+    "directories": {
+      "output": "release"
+    }
+  },
+  "overrides": {
+    "node-abi": "4.14.0"
+  },
+  "description": "Local-first voice dictation, editing and translation for macOS",
+  "author": "Voxa",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EricHong123/voxa.git"
+  },
+  "homepage": "https://github.com/EricHong123/voxa#readme",
+  "bugs": {
+    "url": "https://github.com/EricHong123/voxa/issues"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}
